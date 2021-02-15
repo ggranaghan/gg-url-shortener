@@ -1,47 +1,76 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
 const app = express();
-
-
+const path = require('path');
+const dns = require('dns');
+var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+const db = mongoose.connection;
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
-const UrlSchema = new mongoose.Schema({
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  const UrlSchema = new mongoose.Schema({
     url : String,
-    hash :  Number,
   });
+    Url = mongoose.model('Url', UrlSchema);
+});
 
-const Url = mongoose.model('Url', UrlSchema);
+var Url;
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static('public'));
 
 
-const createAndSaveUrl = function(done) {
-  var newUrl = new Url({url: "http://www.google.com", hash: 42});
-  newUrl.save(function(err, data) {
-    if (err) return console.error(err);
-    done(null, data)
-  });
-};
+
+
+
+
+
+app.post('/api/shorturl/new', (req,res) => {
+  console.log(req.body)
+  const newUrl = new Url(req.body);
+  newUrl.save()
+    .then(item =>{
+      res.send("Information saved to database");
+    })
+    .catch(err =>{
+      res.status(400).send("Unable to save to database");
+    });
+});
+
+
+//   const lookup = dns.lookup(req.body)
+//   try {
+//   } catch (err) {
+//    return (err);
+//   }
+// })
+
+
+  
+
+
 
 
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
 
-app.use(cors());
-
-app.use('/public', express.static(`${process.cwd()}/public`));
-
 app.get('/', function(req, res) {
-  res.sendFile(process.cwd() + '/views/index.html');
+  res.sendFile(path.join(__dirname, 'views/index.html'));
 });
+
 
 // Your first API endpoint
-app.get('/api/hello', function(req, res) {
-  res.json({ greeting: 'hello API' });
+app.post('/api/shorturl/new', function(req, res) {
 });
+
 
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
 });
+
+
