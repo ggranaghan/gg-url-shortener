@@ -54,7 +54,7 @@ app.get('/api/shorturl/:suffix', (req, res) => {
     .then(data => {
       let returnObject = data[data.length - 1]
       console.log(returnObject.original_url)
-      res.redirect(returnObject.original_url)
+      res.redirect(`http://${returnObject.original_url}`)
     })
 });
 
