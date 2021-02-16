@@ -72,21 +72,11 @@ app.use(cors({optionsSuccessStatus: 200}));
 
 
 
-
-
-
-
-
-// Basic Configuration
-const port = process.env.PORT || 3000;
-
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'views/index.html'));
 });
 
-
-var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
-});
-
+// var listener = app.listen(process.env.PORT, function () {
+//   console.log('Your app is listening on port ' + listener.address().port);
+// });
 
