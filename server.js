@@ -2,9 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const path = require('path');
-const dns = require('dns');
+// const dns = require('dns');
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+
 
 var Url;
 var shortUrl;
@@ -81,7 +82,7 @@ app.get('/api/shorturl/:suffix', (req, res) => {
 
 
 // Basic Configuration
-// const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'views/index.html'));
