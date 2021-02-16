@@ -54,9 +54,14 @@ app.post('/api/shorturl/new', (req,res) => {
     });
 });
 
-// Your first API endpoint
 app.get('/api/shorturl/:suffix', (req, res) => {
-
+  let shortPath = req.params.suffix;
+  Url.find({})
+  .then(data => {
+    let returnObject = data[data.length-1]
+    console.log(returnObject.original_url)
+    res.redirect(returnObject.original_url)
+  })
 });
 
 
