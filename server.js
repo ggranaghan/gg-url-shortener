@@ -37,8 +37,15 @@ app.post('/api/shorturl/new', (req, res) => {
 
 
   originalUrl = req.body.url;
-
-
+  var parsedUrl = url.parse(originalUrl)
+  dns.lookup(parsedUrl.hostname, (err, value) => {
+    if (err) {
+      res.json({
+        original_url: originalUrl,
+        error: "invalid url"
+      })
+      return console.log(err)
+    } else {
       shortUrl = req.body.url.match(/(\.)(\w)/)[2];
       console.log('success', originalUrl, shortUrl)
 
@@ -54,6 +61,9 @@ app.post('/api/shorturl/new', (req, res) => {
         original_url: originalUrl,
         short_url: shortUrl
       })
+    }
+  })
+      
   })
 
   app.get('/api/shorturl/:suffix', (req, res) => {
