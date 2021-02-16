@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
 
-app.post('/api/shorturl/new/', (req, res) => {
+app.post('/api/shorturl/new', (req, res) => {
   
   originalUrl = req.body.url;
   shortUrl = req.body.url.match(/(\.)(\w)/)[2];
@@ -52,6 +52,7 @@ app.get('/api/shorturl/:suffix', (req, res) => {
   let shortPath = req.params.suffix;
   Url.find({})
     .then(data => {
+      console.log(data)
       let returnObject = data[data.length - 1]
       console.log(returnObject.original_url)
       res.redirect(`http://${returnObject.original_url}`)
