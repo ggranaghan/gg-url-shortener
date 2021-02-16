@@ -39,12 +39,12 @@ app.post('/api/shorturl/new', (req, res) => {
     short_url: shortUrl
   })
 
-  newUrl.save((err, doc) => {
+  newUrl.save((err) => {
     if (err) return console.log(err) 
-    res.json({
-      original_url: originalUrl,
-      short_url: shortUrl
-    })
+  })
+  res.json({
+    original_url: originalUrl,
+    short_url: shortUrl
   })
 })
 
