@@ -5,6 +5,7 @@ const path = require('path');
 // const dns = require('dns');
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+var cors = require('cors');
 
 var shortUrl;
 var originalUrl;
@@ -23,19 +24,21 @@ console.log("db connected")
 
 
 
+app.use(cors({optionsSuccessStatus: 200}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
 
 app.post('/api/shorturl/new', (req, res) => {
+  
   originalUrl = req.body.url;
   shortUrl = req.body.url.match(/(\.)(\w)/)[2];
   console.log('success', originalUrl, shortUrl)
 
   var newUrl = new Url({
     original_url: originalUrl,
-    short_url: shortUrl,
+    short_url: shortUrl
   })
 
   newUrl.save((err, doc) => {
@@ -57,11 +60,6 @@ app.get('/api/shorturl/:suffix', (req, res) => {
     })
 });
 
-var cors = require('cors');
-app.use(cors({optionsSuccessStatus: 200}));
-
-
-
 
 //   const lookup = dns.lookup(req.body)
 //   try {
@@ -71,12 +69,10 @@ app.use(cors({optionsSuccessStatus: 200}));
 // })
 
 
-
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'views/index.html'));
 });
 
-// var listener = app.listen(process.env.PORT, function () {
-//   console.log('Your app is listening on port ' + listener.address().port);
-// });
-
+var listener = app.listen(process.env.PORT, function () {
+  console.log('Your app is listening on port ' + listener.address().port);
+});
