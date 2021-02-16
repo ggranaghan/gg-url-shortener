@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const path = require('path');
-// const dns = require('dns');
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 var cors = require('cors');
@@ -12,7 +11,6 @@ var originalUrl;
 
 const db = mongoose.connection;
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-
 
 const UrlSchema = new mongoose.Schema({
   original_url: String,
@@ -30,7 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
 
-app.post('/api/shorturl/new', (req, res) => {
+app.post('/api/shorturl/new/', (req, res) => {
   
   originalUrl = req.body.url;
   shortUrl = req.body.url.match(/(\.)(\w)/)[2];
@@ -59,15 +57,6 @@ app.get('/api/shorturl/:suffix', (req, res) => {
       res.redirect(returnObject.original_url)
     })
 });
-
-
-//   const lookup = dns.lookup(req.body)
-//   try {
-//   } catch (err) {
-//    return (err);
-//   }
-// })
-
 
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'views/index.html'));
