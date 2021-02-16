@@ -38,19 +38,14 @@ app.post('/api/shorturl/new', (req, res) => {
     short_url: shortUrl,
   })
 
-  newUrl.save()
-
-
-    .then(item => {
-      res.send({
-        original_url: originalUrl,
-        short_url: shortUrl
-      })
+  newUrl.save((err, doc) => {
+    if (err) return console.log(err) 
+    res.json({
+      original_url: originalUrl,
+      short_url: shortUrl
     })
-    .catch(err => {
-      res.status(400).send("Unable to save to database");
-    });
-});
+  })
+})
 
 app.get('/api/shorturl/:suffix', (req, res) => {
   let shortPath = req.params.suffix;
