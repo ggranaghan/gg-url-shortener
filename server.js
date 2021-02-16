@@ -6,22 +6,20 @@ const path = require('path');
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-
-var Url;
 var shortUrl;
 var originalUrl;
 
 const db = mongoose.connection;
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
+
   const UrlSchema = new mongoose.Schema({
     original_url : String,
     short_url : String
   });
-    Url = mongoose.model('Url', UrlSchema);
-});
+    const Url = mongoose.model('Url', UrlSchema);
+    console.log("db connected")
+
 
 
 app.use(bodyParser.json());
@@ -30,12 +28,11 @@ app.use(express.static('public'));
 
 
 app.post('/api/shorturl/new', (req,res) => {
-  let regex = /(\.)(\w)/;
   originalUrl = req.body.url;
   shortUrl = req.body.url.match(/(\.)(\w)/)[2];
   console.log('success', originalUrl, shortUrl)
 
-  const newUrl = new Url({
+  var newUrl = new Url({
     original_url: originalUrl,
     short_url: shortUrl,
   })
@@ -89,8 +86,8 @@ app.get('/', function(req, res) {
 });
 
 
-app.listen(port, function() {
-  console.log(`Listening on port ${port}`);
+var listener = app.listen(process.env.PORT, function () {
+  console.log('Your app is listening on port ' + listener.address().port);
 });
 
 
