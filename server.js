@@ -13,12 +13,13 @@ const db = mongoose.connection;
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 
-  const UrlSchema = new mongoose.Schema({
-    original_url : String,
-    short_url : String
-  });
-    const Url = mongoose.model('Url', UrlSchema);
-    console.log("db connected")
+const UrlSchema = new mongoose.Schema({
+  original_url: String,
+  short_url: String
+});
+
+const Url = mongoose.model('Url', UrlSchema);
+console.log("db connected")
 
 
 
@@ -27,7 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
 
-app.post('/api/shorturl/new', (req,res) => {
+app.post('/api/shorturl/new', (req, res) => {
   originalUrl = req.body.url;
   shortUrl = req.body.url.match(/(\.)(\w)/)[2];
   console.log('success', originalUrl, shortUrl)
@@ -40,13 +41,13 @@ app.post('/api/shorturl/new', (req,res) => {
   newUrl.save()
 
 
-    .then(item =>{
-    res.send({
-      original_url :originalUrl,
-      short_url : shortUrl
+    .then(item => {
+      res.send({
+        original_url: originalUrl,
+        short_url: shortUrl
+      })
     })
-    })
-    .catch(err =>{
+    .catch(err => {
       res.status(400).send("Unable to save to database");
     });
 });
@@ -54,12 +55,15 @@ app.post('/api/shorturl/new', (req,res) => {
 app.get('/api/shorturl/:suffix', (req, res) => {
   let shortPath = req.params.suffix;
   Url.find({})
-  .then(data => {
-    let returnObject = data[data.length-1]
-    console.log(returnObject.original_url)
-    res.redirect(returnObject.original_url)
-  })
+    .then(data => {
+      let returnObject = data[data.length - 1]
+      console.log(returnObject.original_url)
+      res.redirect(returnObject.original_url)
+    })
 });
+
+var cors = require('cors');
+app.use(cors({optionsSuccessStatus: 200}));
 
 
 
@@ -72,7 +76,7 @@ app.get('/api/shorturl/:suffix', (req, res) => {
 // })
 
 
-  
+
 
 
 
@@ -81,7 +85,7 @@ app.get('/api/shorturl/:suffix', (req, res) => {
 // Basic Configuration
 const port = process.env.PORT || 3000;
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'views/index.html'));
 });
 
