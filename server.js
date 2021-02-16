@@ -39,14 +39,15 @@ app.post('/api/shorturl/new', (req, res) => {
   originalUrl = req.body.url;
   var parsedUrl = url.parse(originalUrl)
   dns.lookup(parsedUrl.hostname, (err, value) => {
-    if (err) {
+    console.log(value)
+    if (err || value == null) {
       res.json({
-        original_url: originalUrl,
         error: "invalid url"
       })
       return console.log(err)
     } else {
-      shortUrl = req.body.url.match(/(\.)(\w)/)[2];
+
+      shortUrl = Math.floor(Math.random() * (100 - 1) + 1);
       console.log('success', originalUrl, shortUrl)
 
       var newUrl = new Url({
